@@ -1,1 +1,3 @@
-# Repository for final project
+Final project
+# Overview
+An emotion detection application using the Watson NLP library and deploy this application over the web using Flask framework
