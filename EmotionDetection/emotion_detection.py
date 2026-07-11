@@ -2,6 +2,17 @@ import requests
 import json
 
 def emotion_detector(text_to_analyze) :
+    """
+    Analyzes text emotional scores using the Watson NLP API.
+
+    Args:
+        text_to_analyze (str): The input text statement to evaluate.
+
+    Returns:
+        dict: Emotion metrics and the dominant emotion name. 
+              Returns all keys as None if input is empty (Status 400).
+    """
+
     url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
     input = {
         "raw_document" : { 
@@ -12,6 +23,15 @@ def emotion_detector(text_to_analyze) :
         "grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"
     }
     response = requests.post(url, json = input, headers=headers)
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+    }
     parsed_data = json.loads(response.text)
     emotion_scores = parsed_data['emotionPredictions'][0]['emotion']
     dominant_emotion = max(emotion_scores,key = emotion_scores.get)
